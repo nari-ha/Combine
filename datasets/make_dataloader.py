@@ -7,16 +7,18 @@ from timm.data.random_erasing import RandomErasing
 from .sampler import RandomIdentitySampler
 from .market1501 import Market1501
 from .msmt17 import MSMT17
+from .dev_market import DevMarket
+from .dev_msmt import DevMSMT
 from .sampler_ddp import RandomIdentitySampler_DDP
 import torch.distributed as dist
-from .vehicleid import VehicleID
 from .veri import VeRi
 
 __factory = {
     'market1501': Market1501,
     'msmt17': MSMT17,
     'veri': VeRi,
-    'VehicleID': VehicleID
+    'dev_market': DevMarket,
+    'dev_msmt': DevMSMT,
 }
 
 def train_collate_fn(batch):
