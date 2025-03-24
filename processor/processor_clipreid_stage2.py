@@ -3,6 +3,7 @@ import os
 import time
 import torch
 import torch.nn as nn
+from utils.curves import draw_curve
 from utils.meter import AverageMeter
 from utils.metrics import R1_mAP_eval
 from torch.cuda import amp
@@ -46,6 +47,9 @@ def do_train_stage2(cfg,
     evaluator = R1_mAP_eval(num_query, max_rank=50, feat_norm=cfg.TEST.FEAT_NORM)
     scaler = amp.GradScaler()
     xent = SupConLoss(device)
+    
+        # 그래프 그리기용 리스트들
+    loss_history, accuracy_history, map_history, r1_history = [], [], [], []
     
     # train
     import time
@@ -119,6 +123,10 @@ def do_train_stage2(cfg,
                             .format(epoch, (n_iter + 1), len(train_loader_stage2),
                                     loss_meter.avg, acc_meter.avg, scheduler.get_lr()[0]))
 
+        # 각 epoch가 끝날 때마다 loss랑 accuracy 저장        
+        loss_history.append(loss_meter.avg)
+        accuracy_history.append(acc_meter.avg)
+        
         end_time = time.time()
         time_per_batch = (end_time - start_time) / (n_iter + 1)
         if cfg.MODEL.DIST_TRAIN:
@@ -127,64 +135,41 @@ def do_train_stage2(cfg,
             logger.info("Epoch {} done. Time per batch: {:.3f}[s] Speed: {:.1f}[samples/s]"
                     .format(epoch, time_per_batch, train_loader_stage2.batch_size / time_per_batch))
 
-        if epoch % checkpoint_period == 0:
-            if cfg.MODEL.DIST_TRAIN:
-                if dist.get_rank() == 0:
-                    torch.save(model.state_dict(),
-                               os.path.join(cfg.OUTPUT_DIR, cfg.MODEL.NAME + '_{}.pth'.format(epoch)))
-            else:
-                torch.save(model.state_dict(),
-                           os.path.join(cfg.OUTPUT_DIR, cfg.MODEL.NAME + '_{}.pth'.format(epoch)))
-
-        if epoch % eval_period == 0:
-            if cfg.MODEL.DIST_TRAIN:
-                if dist.get_rank() == 0:
-                    model.eval()
-                    for n_iter, (img, vid, camid, camids, target_view, _) in enumerate(val_loader):
-                        with torch.no_grad():
-                            img = img.to(device)
-                            if cfg.MODEL.SIE_CAMERA:
-                                camids = camids.to(device)
-                            else: 
-                                camids = None
-                            if cfg.MODEL.SIE_VIEW:
-                                target_view = target_view.to(device)
-                            else: 
-                                target_view = None
-                            feat = model(img, cam_label=camids, view_label=target_view)
-                            evaluator.update((feat, vid, camid))
-                    cmc, mAP, _, _, _, _, _ = evaluator.compute()
-                    logger.info("Validation Results - Epoch: {}".format(epoch))
-                    logger.info("mAP: {:.1%}".format(mAP))
-                    for r in [1, 5, 10]:
-                        logger.info("CMC curve, Rank-{:<3}:{:.1%}".format(r, cmc[r - 1]))
-                    torch.cuda.empty_cache()
-            else:
-                model.eval()
-                for n_iter, (img, vid, camid, camids, target_view, _) in enumerate(val_loader):
-                    with torch.no_grad():
-                        img = img.to(device)
-                        if cfg.MODEL.SIE_CAMERA:
-                            camids = camids.to(device)
-                        else: 
-                            camids = None
-                        if cfg.MODEL.SIE_VIEW:
-                            target_view = target_view.to(device)
-                        else: 
-                            target_view = None
-                        feat = model(img, cam_label=camids, view_label=target_view)
-                        evaluator.update((feat, vid, camid))
-                cmc, mAP, _, _, _, _, _ = evaluator.compute()
-                logger.info("Validation Results - Epoch: {}".format(epoch))
-                logger.info("mAP: {:.1%}".format(mAP))
-                for r in [1, 5, 10]:
-                    logger.info("CMC curve, Rank-{:<3}:{:.1%}".format(r, cmc[r - 1]))
-                torch.cuda.empty_cache()
-
+        
+    # 학습 끝나면 그래프 생성 및 저장
+    draw_curve(cfg, loss_history, accuracy_history, map_history, r1_history)
+    
     all_end_time = time.monotonic()
     total_time = timedelta(seconds=all_end_time - all_start_time)
     logger.info("Total running time: {}".format(total_time))
     print(cfg.OUTPUT_DIR)
+
+def save_model(cfg, model, epoch):
+    if cfg.MODEL.DIST_TRAIN and dist.get_rank() != 0:
+        return  # 분산 훈련 시 rank 0만 저장
+    
+    torch.save(model.state_dict(),
+               os.path.join(cfg.OUTPUT_DIR, f"{cfg.MODEL.NAME}_{epoch}.pth"))
+       
+
+def evaluate_model(cfg, model, val_loader, evaluator, device, epoch, logger):
+    model.eval()
+    for n_iter, (img, vid, camid, camids, target_view, _) in enumerate(val_loader):
+        with torch.no_grad():
+            img = img.to(device)
+            camids = camids.to(device) if cfg.MODEL.SIE_CAMERA else None
+            target_view = target_view.to(device) if cfg.MODEL.SIE_VIEW else None
+            feat = model(img, cam_label=camids, view_label=target_view)
+            evaluator.update((feat, vid, camid))
+    
+    cmc, mAP, _, _, _, _, _ = evaluator.compute()
+    logger.info(f"Validation Results - Epoch: {epoch}")
+    logger.info(f"mAP: {mAP:.1%}")
+    for r in [1, 5, 10]:
+        logger.info(f"CMC curve, Rank-{r:<3}:{cmc[r - 1]:.1%}")
+    
+    torch.cuda.empty_cache()
+    return mAP, cmc[0]
 
 def do_inference(cfg,
                  model,
