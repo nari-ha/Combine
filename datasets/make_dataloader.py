@@ -67,20 +67,23 @@ def make_dataloader(cfg):
             else:
                 dataset1 = Market1501(root=cfg.DATASETS.ROOT_DIR)
                 dataset2 = MSMT17(root=cfg.DATASETS.ROOT_DIR)
+            num_classes = dataset1.num_train_pids + dataset2.num_train_pids
+            cam_num = dataset1.num_train_cams + dataset2.num_train_cams
+            view_num = max(dataset1.num_train_vids, dataset2.num_train_vids)
+            train_data = dataset1.train + dataset2.train
+            query_data = dataset1.query + dataset2.query
+            gallery_data = dataset1.gallery + dataset2.gallery
         elif dataset_name == "vehicle":
             return None
         elif dataset_name == "multi":
             dataset3 = VeRi(root=cfg.DATASETS.ROOT_DIR)
+            num_classes = dataset1.num_train_pids + dataset2.num_train_pids + dataset3.num_train_pids
+            cam_num = dataset1.num_train_cams + dataset2.num_train_cams + dataset3.num_train_cams
+            view_num = max(dataset1.num_train_vids, dataset2.num_train_vids, dataset3.num_train_vids)
+            train_data = dataset1.train + dataset2.train + dataset3.train
+            query_data = dataset1.query + dataset2.query + dataset3.query
+            gallery_data = dataset1.gallery + dataset2.gallery + dataset3.gallery
         
-        pid_offset = dataset1.num_train_pids
-        cam_offset = dataset2.num_train_cams
-        num_classes = dataset1.num_train_pids + dataset2.num_train_pids
-        cam_num = dataset1.num_train_cams + dataset2.num_train_cams
-        view_num = max(dataset1.num_train_vids, dataset2.num_train_vids)
-        
-        train_data = dataset1.train + dataset2.query
-        query_data = dataset1.query + dataset2.query
-        gallery_data = dataset1.gallery + dataset2.gallery
         train_set = ImageDataset(train_data, train_transforms)
         train_set_normal = ImageDataset(train_data, val_transforms)
         val_set = ImageDataset(query_data + gallery_data, val_transforms)
