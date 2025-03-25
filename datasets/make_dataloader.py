@@ -78,7 +78,8 @@ def make_dataloader(cfg):
         cam_num = dataset1.num_train_cams + dataset2.num_train_cams
         view_num = max(dataset1.num_train_vids, dataset2.num_train_vids)
         
-        train_data = dataset1.train + dataset2.train
+        train_data = dataset1.train + dataset2.query
+        query_data = dataset1.query + dataset2.query
         gallery_data = dataset1.gallery + dataset2.gallery
         train_set = ImageDataset(train_data, train_transforms)
         train_set_normal = ImageDataset(train_data, val_transforms)
