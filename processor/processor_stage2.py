@@ -133,7 +133,15 @@ def do_train_stage2(cfg,
             pass
         else:
             logger.info("Epoch {} done. Time per batch: {:.3f}[s] Speed: {:.1f}[samples/s]"
-                    .format(epoch, time_per_batch, train_loader_stage2.batch_size / time_per_batch))
+                    .format(epoch, time_per_batch, train_loader_stage2.batch_size / time_per_batch))        
+    
+        if epoch % checkpoint_period == 0:
+            save_model(cfg, model, epoch)
+
+        if epoch % eval_period == 0:
+            mAP, r1 = evaluate_model(cfg, model, val_loader, evaluator, device, epoch, logger)  # 모델 평가
+            map_history.append(round(mAP * 100, 1))
+            r1_history.append(round(r1 * 100, 1))
 
         
     # 학습 끝나면 그래프 생성 및 저장
