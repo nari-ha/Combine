@@ -77,12 +77,12 @@ DATASETS:
 #   ROOT_DIR: ('')
 # OUTPUT_DIR: ''
 
-  NAMES: ('multi')
-  EVAL: ('multi')
-  ROOT_DIR: ('./../dataset')
+  NAMES: ('dev-market')
+  EVAL: ('dev-market')
+  ROOT_DIR: './../dataset'
 OUTPUT_DIR: './output/dev'
-DATA_COMBINE: True
 
+DATA_COMBINE: False
 DEV_MODE: True
 
 # python train.py --config_file configs/dev/cnn_dev.yml
