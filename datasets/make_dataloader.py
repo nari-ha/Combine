@@ -78,7 +78,6 @@ def make_dataloader(cfg):
             sampler=RandomIdentitySampler(train_data, cfg.SOLVER.STAGE2.IMS_PER_BATCH, cfg.DATALOADER.NUM_INSTANCE),
             num_workers=num_workers, collate_fn=train_collate_fn
         )
-
         
     else:
         dataset = __factory[cfg.DATASETS.NAMES](root=cfg.DATASETS.ROOT_DIR)
@@ -87,7 +86,8 @@ def make_dataloader(cfg):
         num_classes = dataset.num_train_pids
         cam_num = dataset.num_train_cams
         view_num = dataset.num_train_vids
-        val_set = ImageDataset(dataset.query + dataset.gallery, val_transforms)
+        dataset_val = __factory[cfg.DATASETS.EVAL](root=cfg.DATASETS.ROOT_DIR)
+        val_set = ImageDataset(dataset_val.query + dataset_val.gallery, val_transforms)
 
         train_loader_stage2 = DataLoader(
             train_set, batch_size=cfg.SOLVER.STAGE2.IMS_PER_BATCH,
@@ -99,6 +99,5 @@ def make_dataloader(cfg):
         val_set, batch_size=cfg.TEST.IMS_PER_BATCH, shuffle=False, num_workers=num_workers,
         collate_fn=val_collate_fn
     )
-        
     
     return train_loader_stage2, train_loader_stage1, val_loader, len(dataset.query), num_classes, cam_num, view_num
