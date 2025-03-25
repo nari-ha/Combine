@@ -36,6 +36,7 @@ def val_collate_fn(batch):
 
 def make_dataloader(cfg):
     data_combine = cfg.DATA_COMBINE
+    dataset_name = cfg.DATASETS.NAMES
     
     train_transforms = T.Compose([
             T.Resize(cfg.INPUT.SIZE_TRAIN, interpolation=3),
@@ -59,16 +60,16 @@ def make_dataloader(cfg):
 
     
     if data_combine == True:
-        if cfg.DATASETS.NAME == "person":
+        if dataset_name == "person":
             if cfg.DEV_MODE == True:
                 dataset1 = DevMarket(root=cfg.DATASETS.ROOT_DIR)
                 dataset2 = DevMSMT(root=cfg.DATASETS.ROOT_DIR)
             else:
                 dataset1 = Market1501(root=cfg.DATASETS.ROOT_DIR)
                 dataset2 = MSMT17(root=cfg.DATASETS.ROOT_DIR)
-        elif cfg.DATASETS.NAME == "vehicle":
+        elif dataset_name == "vehicle":
             return None
-        elif cfg.DATASETS.NAME == "multi":
+        elif dataset_name == "multi":
             dataset3 = VeRi(root=cfg.DATASETS.ROOT_DIR)
         
         pid_offset = dataset1.num_train_pids
