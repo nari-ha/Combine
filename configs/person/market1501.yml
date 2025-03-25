@@ -85,3 +85,4 @@ DATA_COMBINE: False
 
 
 # CUDA_VISIBLE_DEVICES=1 python train_clipreid.py --config_file configs/person/res_clipreid.yml
+# python test.py --config_file configs/person/market1501.yml TEST.WEIGHT '/data/home/ec23709/project/Combine/output/combine/RN50_120.pth'

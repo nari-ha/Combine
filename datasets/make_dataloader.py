@@ -101,8 +101,7 @@ def make_dataloader(cfg):
         num_classes = dataset.num_train_pids
         cam_num = dataset.num_train_cams
         view_num = dataset.num_train_vids
-        dataset_val = __factory[cfg.DATASETS.EVAL](root=cfg.DATASETS.ROOT_DIR)
-        val_set = ImageDataset(dataset_val.query + dataset_val.gallery, val_transforms)
+        val_set = ImageDataset(dataset.query + dataset.gallery, val_transforms)
         
         train_loader_stage1 = DataLoader(
         train_set_normal, batch_size=cfg.SOLVER.STAGE1.IMS_PER_BATCH, shuffle=True, num_workers=num_workers,
