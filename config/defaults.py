@@ -238,3 +238,4 @@ _C.TEST.EVAL = False
 _C.OUTPUT_DIR = ""
 
 _C.DATA_COMBINE = False
+_C.DEV_MODE = False
