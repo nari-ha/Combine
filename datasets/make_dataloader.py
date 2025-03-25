@@ -35,6 +35,8 @@ def val_collate_fn(batch):
     return torch.stack(imgs, dim=0), pids, camids, camids_batch, viewids, img_paths
 
 def make_dataloader(cfg):
+    data_combine = cfg.DATA_COMBINE
+    
     train_transforms = T.Compose([
             T.Resize(cfg.INPUT.SIZE_TRAIN, interpolation=3),
             T.RandomHorizontalFlip(p=cfg.INPUT.PROB),
@@ -53,51 +55,50 @@ def make_dataloader(cfg):
     ])
 
     num_workers = cfg.DATALOADER.NUM_WORKERS
-
-    dataset = __factory[cfg.DATASETS.NAMES](root=cfg.DATASETS.ROOT_DIR)
     
-    train_set = ImageDataset(dataset.train, train_transforms)
-    train_set_normal = ImageDataset(dataset.train, val_transforms)
-    num_classes = dataset.num_train_pids
-    cam_num = dataset.num_train_cams
-    view_num = dataset.num_train_vids
-
-    if 'triplet' in cfg.DATALOADER.SAMPLER:
-        if cfg.MODEL.DIST_TRAIN:
-            print('DIST_TRAIN START')
-            mini_batch_size = cfg.SOLVER.STAGE2.IMS_PER_BATCH // dist.get_world_size()
-            data_sampler = RandomIdentitySampler_DDP(dataset.train, cfg.SOLVER.STAGE2.IMS_PER_BATCH, cfg.DATALOADER.NUM_INSTANCE)
-            batch_sampler = torch.utils.data.sampler.BatchSampler(data_sampler, mini_batch_size, True)
-            train_loader_stage2 = torch.utils.data.DataLoader(
-                train_set,
-                num_workers=num_workers,
-                batch_sampler=batch_sampler,
-                collate_fn=train_collate_fn,
-                pin_memory=True,
-            )
-        else:
-            train_loader_stage2 = DataLoader(
-                train_set, batch_size=cfg.SOLVER.STAGE2.IMS_PER_BATCH,
-                sampler=RandomIdentitySampler(dataset.train, cfg.SOLVER.STAGE2.IMS_PER_BATCH, cfg.DATALOADER.NUM_INSTANCE),
-                num_workers=num_workers, collate_fn=train_collate_fn
-            )
-    elif cfg.DATALOADER.SAMPLER == 'softmax':
-        print('using softmax sampler')
+    train_loader_stage1 = DataLoader(
+        train_set_normal, batch_size=cfg.SOLVER.STAGE1.IMS_PER_BATCH, shuffle=True, num_workers=num_workers,
+        collate_fn=train_collate_fn
+    )
+    
+    if data_combine == True:
+        dataset1 = Market1501(root=cfg.DATASETS.ROOT_DIR)
+        dataset2 = MSMT17(root=cfg.DATASETS.ROOT_DIR)
+        
+        pid_offset = dataset1.num_train_pids
+        cam_offset = dataset2.num_train_cams
+        
+        train_data = dataset1.train + [(img_path, pid + pid_offset, camid + cam_offset, viewid) for img_path, pid, camid, viewid in dataset2.train]
+        query_data = dataset1.query + dataset2.query
+        gallery_data = dataset1.gallery + dataset2.gallery
+        val_set = ImageDataset(query_data + gallery_data, val_transforms)
+        
         train_loader_stage2 = DataLoader(
-            train_set, batch_size=cfg.SOLVER.STAGE2.IMS_PER_BATCH, shuffle=True, num_workers=num_workers,
-            collate_fn=train_collate_fn
+            train_set, batch_size=cfg.SOLVER.STAGE2.IMS_PER_BATCH,
+            sampler=RandomIdentitySampler(train_data, cfg.SOLVER.STAGE2.IMS_PER_BATCH, cfg.DATALOADER.NUM_INSTANCE),
+            num_workers=num_workers, collate_fn=train_collate_fn
         )
-    else:
-        print('unsupported sampler! expected softmax or triplet but got {}'.format(cfg.SAMPLER))
 
-    val_set = ImageDataset(dataset.query + dataset.gallery, val_transforms)
+        
+    else:
+        dataset = __factory[cfg.DATASETS.NAMES](root=cfg.DATASETS.ROOT_DIR)
+        train_set = ImageDataset(dataset.train, train_transforms)
+        train_set_normal = ImageDataset(dataset.train, val_transforms)
+        num_classes = dataset.num_train_pids
+        cam_num = dataset.num_train_cams
+        view_num = dataset.num_train_vids
+        val_set = ImageDataset(dataset.query + dataset.gallery, val_transforms)
+
+        train_loader_stage2 = DataLoader(
+            train_set, batch_size=cfg.SOLVER.STAGE2.IMS_PER_BATCH,
+            sampler=RandomIdentitySampler(dataset.train, cfg.SOLVER.STAGE2.IMS_PER_BATCH, cfg.DATALOADER.NUM_INSTANCE),
+            num_workers=num_workers, collate_fn=train_collate_fn
+        )
 
     val_loader = DataLoader(
         val_set, batch_size=cfg.TEST.IMS_PER_BATCH, shuffle=False, num_workers=num_workers,
         collate_fn=val_collate_fn
     )
-    train_loader_stage1 = DataLoader(
-        train_set_normal, batch_size=cfg.SOLVER.STAGE1.IMS_PER_BATCH, shuffle=True, num_workers=num_workers,
-        collate_fn=train_collate_fn
-    )
+        
+    
     return train_loader_stage2, train_loader_stage1, val_loader, len(dataset.query), num_classes, cam_num, view_num

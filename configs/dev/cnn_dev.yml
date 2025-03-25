@@ -80,5 +80,6 @@ DATASETS:
   NAMES: ('dev_market')
   ROOT_DIR: ('./../dataset')
 OUTPUT_DIR: './output/dev'
+DATA_COMBINE: True
 
 # python train.py --config_file configs/dev/cnn_dev.yml
