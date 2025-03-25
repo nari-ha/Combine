@@ -6,6 +6,7 @@ MODEL:
   NAME: 'RN50'
   ID_LOSS_WEIGHT : 1.0
   TRIPLET_LOSS_WEIGHT : 1.0
+  I2T_LOSS_WEIGHT : 1.0
 
 INPUT:
   SIZE_TRAIN: [256, 256]
@@ -64,8 +65,10 @@ TEST:
   FEAT_NORM: 'yes'
 
 DATASETS:
-#   NAMES: ('veri')
-#   ROOT_DIR: ('')
-# OUTPUT_DIR: ''
+  NAMES: ('veri')
+  EVAL: ('veri')
+  ROOT_DIR: ('./../dataset')
+OUTPUT_DIR: './output/veri'
+DATA_COMBINE: False
 
-# CUDA_VISIBLE_DEVICES=2 python train_clipreid.py --config_file configs/veri/res_clipreid.yml
+# python train.py --config_file configs/veri/cnn.yml
