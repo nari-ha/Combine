@@ -56,10 +56,7 @@ def make_dataloader(cfg):
 
     num_workers = cfg.DATALOADER.NUM_WORKERS
     
-    train_loader_stage1 = DataLoader(
-        train_set_normal, batch_size=cfg.SOLVER.STAGE1.IMS_PER_BATCH, shuffle=True, num_workers=num_workers,
-        collate_fn=train_collate_fn
-    )
+
     
     if data_combine == True:
         dataset1 = Market1501(root=cfg.DATASETS.ROOT_DIR)
@@ -71,6 +68,8 @@ def make_dataloader(cfg):
         train_data = dataset1.train + [(img_path, pid + pid_offset, camid + cam_offset, viewid) for img_path, pid, camid, viewid in dataset2.train]
         query_data = dataset1.query + dataset2.query
         gallery_data = dataset1.gallery + dataset2.gallery
+        train_set = ImageDataset(train_data, train_transforms)
+        train_set_normal = ImageDataset(train_data, val_transforms)
         val_set = ImageDataset(query_data + gallery_data, val_transforms)
         
         train_loader_stage2 = DataLoader(
@@ -78,6 +77,7 @@ def make_dataloader(cfg):
             sampler=RandomIdentitySampler(train_data, cfg.SOLVER.STAGE2.IMS_PER_BATCH, cfg.DATALOADER.NUM_INSTANCE),
             num_workers=num_workers, collate_fn=train_collate_fn
         )
+        query_len = len(query_data)
         
     else:
         dataset = __factory[cfg.DATASETS.NAMES](root=cfg.DATASETS.ROOT_DIR)
@@ -88,16 +88,27 @@ def make_dataloader(cfg):
         view_num = dataset.num_train_vids
         dataset_val = __factory[cfg.DATASETS.EVAL](root=cfg.DATASETS.ROOT_DIR)
         val_set = ImageDataset(dataset_val.query + dataset_val.gallery, val_transforms)
+        
+        train_loader_stage1 = DataLoader(
+        train_set_normal, batch_size=cfg.SOLVER.STAGE1.IMS_PER_BATCH, shuffle=True, num_workers=num_workers,
+        collate_fn=train_collate_fn
+        )
 
         train_loader_stage2 = DataLoader(
             train_set, batch_size=cfg.SOLVER.STAGE2.IMS_PER_BATCH,
             sampler=RandomIdentitySampler(dataset.train, cfg.SOLVER.STAGE2.IMS_PER_BATCH, cfg.DATALOADER.NUM_INSTANCE),
             num_workers=num_workers, collate_fn=train_collate_fn
         )
-
+        query_len = len(dataset.query)
+        
+    train_loader_stage1 = DataLoader(
+        train_set_normal, batch_size=cfg.SOLVER.STAGE1.IMS_PER_BATCH, shuffle=True, num_workers=num_workers,
+        collate_fn=train_collate_fn
+    )
+    
     val_loader = DataLoader(
         val_set, batch_size=cfg.TEST.IMS_PER_BATCH, shuffle=False, num_workers=num_workers,
         collate_fn=val_collate_fn
     )
     
-    return train_loader_stage2, train_loader_stage1, val_loader, len(dataset.query), num_classes, cam_num, view_num
+    return train_loader_stage2, train_loader_stage1, val_loader, query_len, num_classes, cam_num, view_num
