@@ -34,6 +34,7 @@ if __name__ == '__main__':
                         nargs=argparse.REMAINDER)
     parser.add_argument("--local_rank", default=0, type=int)
     args = parser.parse_args()
+    
 
     if args.config_file != "":
         cfg.merge_from_file(args.config_file)
