@@ -78,7 +78,7 @@ DATASETS:
 # OUTPUT_DIR: ''
 
   NAMES: ('person')
-  EVAL: ('person')
+  EVAL: 'person'
   ROOT_DIR: ('./../dataset')
 OUTPUT_DIR: './output/combine'
 DATA_COMBINE: True
