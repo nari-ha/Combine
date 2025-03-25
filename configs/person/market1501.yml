@@ -77,8 +77,8 @@ DATASETS:
 #   ROOT_DIR: ('')
 # OUTPUT_DIR: ''
 
-  NAMES: ('marekt1501')
-  EVAL: 'marekt1501'
+  NAMES: ('market1501')
+  EVAL: 'market1501'
   ROOT_DIR: ('./../dataset')
 OUTPUT_DIR: './output/market1501'
 DATA_COMBINE: False
