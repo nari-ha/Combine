@@ -77,8 +77,8 @@ DATASETS:
 #   ROOT_DIR: ('')
 # OUTPUT_DIR: ''
 
-  NAMES: ('person')
-  EVAL: ('person')
+  NAMES: ('multi')
+  EVAL: ('multi')
   ROOT_DIR: ('./../dataset')
 OUTPUT_DIR: './output/dev'
 DATA_COMBINE: True
