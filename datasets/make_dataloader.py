@@ -103,20 +103,21 @@ def make_dataloader(cfg):
         
     else:
         print("데이터셋: ", cfg.DATASETS.NAMES)
-        dataset = __factory[cfg.DATASETS.NAMES](root=cfg.DATASETS.ROOT_DIR)
-        train_set = ImageDataset(dataset.train, train_transforms)
-        train_set_normal = ImageDataset(dataset.train, val_transforms)
-        num_classes = dataset.num_train_pids
-        cam_num = dataset.num_train_cams
-        view_num = dataset.num_train_vids
-        val_set = ImageDataset(dataset.query + dataset.gallery, val_transforms)
+        dataset_train = __factory[dataset_name](root=cfg.DATASETS.ROOT_DIR)
+        train_set = ImageDataset(dataset_train.train, train_transforms)
+        train_set_normal = ImageDataset(dataset_train.train, val_transforms)
+        num_classes = dataset_train.num_train_pids
+        cam_num = dataset_train.num_train_cams
+        view_num = dataset_train.num_train_vids
+        dataset_eval = __factory[eval_name](root=cfg.DATASETS.ROOT_DIR)
+        val_set = ImageDataset(dataset_eval.query + dataset_eval.gallery, val_transforms)
 
         train_loader_stage2 = DataLoader(
             train_set, batch_size=cfg.SOLVER.STAGE2.IMS_PER_BATCH,
             sampler=RandomIdentitySampler(dataset.train, cfg.SOLVER.STAGE2.IMS_PER_BATCH, cfg.DATALOADER.NUM_INSTANCE),
             num_workers=num_workers, collate_fn=train_collate_fn
         )
-        query_len = len(dataset.query)
+        query_len = len(dataset_eval.query)
         
     train_loader_stage1 = DataLoader(
         train_set_normal, batch_size=cfg.SOLVER.STAGE1.IMS_PER_BATCH, shuffle=True, num_workers=num_workers,
