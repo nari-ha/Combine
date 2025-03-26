@@ -114,7 +114,7 @@ def make_dataloader(cfg):
 
         train_loader_stage2 = DataLoader(
             train_set, batch_size=cfg.SOLVER.STAGE2.IMS_PER_BATCH,
-            sampler=RandomIdentitySampler(dataset.train, cfg.SOLVER.STAGE2.IMS_PER_BATCH, cfg.DATALOADER.NUM_INSTANCE),
+            sampler=RandomIdentitySampler(dataset_train.train, cfg.SOLVER.STAGE2.IMS_PER_BATCH, cfg.DATALOADER.NUM_INSTANCE),
             num_workers=num_workers, collate_fn=train_collate_fn
         )
         query_len = len(dataset_eval.query)

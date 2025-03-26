@@ -74,4 +74,4 @@ DATA_COMBINE: False
 DEV_MODE: True
 
 # python train.py --config_file configs/dev/cnn_dev.yml
-# python train.py --config_file configs/dev/cnn_dev.yml
+# dev_market & dev_msmt
