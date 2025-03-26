@@ -95,6 +95,7 @@ def make_dataloader(cfg):
         query_len = len(query_data)
         
     else:
+        print("데이터셋: ", cfg.DATASETS.NAMES)
         dataset = __factory[cfg.DATASETS.NAMES](root=cfg.DATASETS.ROOT_DIR)
         train_set = ImageDataset(dataset.train, train_transforms)
         train_set_normal = ImageDataset(dataset.train, val_transforms)
