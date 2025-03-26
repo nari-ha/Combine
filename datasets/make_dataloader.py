@@ -37,6 +37,7 @@ def val_collate_fn(batch):
 def make_dataloader(cfg):
     data_combine = cfg.DATA_COMBINE
     dataset_name = cfg.DATASETS.NAMES
+    eval_name = cfg.DATASETS.EVAL
     
     train_transforms = T.Compose([
             T.Resize(cfg.INPUT.SIZE_TRAIN, interpolation=3),
@@ -86,13 +87,19 @@ def make_dataloader(cfg):
         train_set = ImageDataset(train_data, train_transforms)
         train_set_normal = ImageDataset(train_data, val_transforms)
         val_set = ImageDataset(query_data + gallery_data, val_transforms)
+        query_len = len(query_data)
+        
+        if eval_name != dataset_name:
+            dataset = __factory[eval_name](root=cfg.DATASETS.ROOT_DIR)
+            val_set = ImageDataset(dataset.query + dataset.gallery, val_transforms)
+            query_len = len(dataset.query)
         
         train_loader_stage2 = DataLoader(
             train_set, batch_size=cfg.SOLVER.STAGE2.IMS_PER_BATCH,
             sampler=RandomIdentitySampler(train_data, cfg.SOLVER.STAGE2.IMS_PER_BATCH, cfg.DATALOADER.NUM_INSTANCE),
             num_workers=num_workers, collate_fn=train_collate_fn
         )
-        query_len = len(query_data)
+        
         
     else:
         print("데이터셋: ", cfg.DATASETS.NAMES)
@@ -103,11 +110,6 @@ def make_dataloader(cfg):
         cam_num = dataset.num_train_cams
         view_num = dataset.num_train_vids
         val_set = ImageDataset(dataset.query + dataset.gallery, val_transforms)
-        
-        train_loader_stage1 = DataLoader(
-        train_set_normal, batch_size=cfg.SOLVER.STAGE1.IMS_PER_BATCH, shuffle=True, num_workers=num_workers,
-        collate_fn=train_collate_fn
-        )
 
         train_loader_stage2 = DataLoader(
             train_set, batch_size=cfg.SOLVER.STAGE2.IMS_PER_BATCH,
