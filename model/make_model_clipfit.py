@@ -64,6 +64,12 @@ class build_transformer(nn.Module):
         clip_model.to("cuda")
 
         self.image_encoder = clip_model.visual
+        
+        for module in self.image_encoder.modules():
+            if isinstance(module, nn.BatchNorm1d) or isinstance(module, nn.BatchNorm2d):
+                if module.affine:
+                    module.weight.requires_grad_(False)
+                    module.bias.requires_grad_(True)
 
         if cfg.MODEL.SIE_CAMERA and cfg.MODEL.SIE_VIEW:
             self.cv_embed = nn.Parameter(torch.zeros(camera_num * view_num, self.in_planes))
