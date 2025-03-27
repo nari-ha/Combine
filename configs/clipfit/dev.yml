@@ -73,5 +73,5 @@ OUTPUT_DIR: './output/dev'
 DATA_COMBINE: False
 DEV_MODE: True
 
-# python train.py --config_file configs/dev/cnn_dev.yml
+# python train_fit.py --config_file configs/clipfit/dev.yml
 # dev_market & dev_msmt
