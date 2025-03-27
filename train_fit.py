@@ -10,7 +10,7 @@ import torch
 import numpy as np
 import os
 import argparse
-from config import cfg_base as cfg
+from config import cfg as cfg
 
 def set_seed(seed):
     torch.manual_seed(seed)
