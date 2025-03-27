@@ -1,5 +1,5 @@
 from utils.logger import setup_logger
-from datasets.make_dataloader import make_dataloader
+from datasets.make_dataloader_clipfit import make_dataloader
 from model.make_model_clipfit import make_model
 from solver.make_optimizer import make_optimizer
 from solver.lr_scheduler import WarmupMultiStepLR
