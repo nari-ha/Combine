@@ -52,7 +52,7 @@ DATASETS:
   NAMES: ('market1501')
   EVAL: 'msmt17'
   ROOT_DIR: ('./../dataset')
-OUTPUT_DIR: './output/msmt17'
+OUTPUT_DIR: './output/clipfit/msmt17'
 
 DATA_COMBINE: False
 

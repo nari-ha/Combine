@@ -49,7 +49,7 @@ TEST:
   FEAT_NORM: 'yes'
 
 DATASETS:
-  NAMES: ('market1501')
+  NAMES: ('msmt17')
   EVAL: 'market1501'
   ROOT_DIR: ('./../dataset')
 OUTPUT_DIR: './output/clipfit/market1501'
