@@ -61,6 +61,7 @@ def make_dataloader(cfg):
     if data_combine == True:
         dataset1 = Market1501(root=cfg.DATASETS.ROOT_DIR)
         dataset2 = MSMT17(root=cfg.DATASETS.ROOT_DIR)
+        dataset3 = VeRi(root=cfg.DATASETS.ROOT_DIR)
         if dataset_name == "person":
             if cfg.DEV_MODE == True:
                 dataset1 = DevMarket(root=cfg.DATASETS.ROOT_DIR)
