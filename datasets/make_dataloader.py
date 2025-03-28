@@ -100,13 +100,21 @@ def make_dataloader(cfg):
         
         train_set = ImageDataset(train_data, train_transforms)
         train_set_normal = ImageDataset(train_data, val_transforms)
-        val_set = ImageDataset(query_data + gallery_data, val_transforms)
-        query_len = len(query_data)
+
         
         if eval_name == 'market1501' or eval_name == 'msmt17' or eval_name == 'veri':
             dataset = __factory[eval_name](root=cfg.DATASETS.ROOT_DIR)
-            val_set = ImageDataset(dataset.query + dataset.gallery, val_transforms)
-            query_len = len(dataset.query)
+            query_data = dataset.query
+            gallery_data = dataset.gallery
+        elif eval_name == 'person':
+            query_data = dataset1.query + dataset2.query
+            gallery_data = dataset1.gallery + dataset2.gallery
+        elif eval_name == 'multi':
+            query_data = dataset1.query + dataset2.query + dataset3.query
+            gallery_data = dataset1.gallery + dataset2.gallery + dataset3.gallery
+            
+        val_set = ImageDataset(query_data + gallery_data, val_transforms)    
+        query_len = len(query_data)
         
         train_loader_stage2 = DataLoader(
             train_set, batch_size=cfg.SOLVER.STAGE2.IMS_PER_BATCH,
