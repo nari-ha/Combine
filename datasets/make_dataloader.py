@@ -103,7 +103,7 @@ def make_dataloader(cfg):
         val_set = ImageDataset(query_data + gallery_data, val_transforms)
         query_len = len(query_data)
         
-        if eval_name != dataset_name:
+        if eval_name == 'market1501' or eval_name == 'msmt17' or eval_name == 'veri':
             dataset = __factory[eval_name](root=cfg.DATASETS.ROOT_DIR)
             val_set = ImageDataset(dataset.query + dataset.gallery, val_transforms)
             query_len = len(dataset.query)
