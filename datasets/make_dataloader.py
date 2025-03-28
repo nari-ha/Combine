@@ -83,6 +83,20 @@ def make_dataloader(cfg):
             train_data = dataset1.train + dataset2.train + dataset3.train
             query_data = dataset1.query + dataset2.query + dataset3.query
             gallery_data = dataset1.gallery + dataset2.gallery + dataset3.gallery
+        elif dataset_name == "market1501":
+            num_classes = dataset1.num_train_pids
+            cam_num = dataset1.num_train_cams
+            view_num = dataset1.num_train_vids
+            train_data = dataset1.train
+            query_data = dataset1.query
+            gallery_data = dataset1.gallery
+        elif dataset_name == "msmt17":
+            num_classes = dataset2.num_train_pids
+            cam_num = dataset2.num_train_cams
+            view_num = dataset2.num_train_vids
+            train_data = dataset2.train
+            query_data = dataset2.query
+            gallery_data = dataset2.gallery
         
         train_set = ImageDataset(train_data, train_transforms)
         train_set_normal = ImageDataset(train_data, val_transforms)
