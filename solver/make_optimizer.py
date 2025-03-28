@@ -2,6 +2,11 @@ import torch
 
 def make_optimizer(cfg, model, center_criterion):
     params = []
+    for k, v in model.named_parameters():
+        if v.requires_grad:
+            print(f"Trainable: {k}")
+        else:
+            print(f"Frozen: {k}")
     for key, value in model.named_parameters():
         if not value.requires_grad:
             continue
