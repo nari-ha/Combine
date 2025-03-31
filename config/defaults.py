@@ -240,4 +240,3 @@ _C.OUTPUT_DIR = ""
 
 _C.DATA_COMBINE = False
 _C.DEV_MODE = False
-_C.EVAL_DATA = 0

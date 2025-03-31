@@ -56,4 +56,4 @@ OUTPUT_DIR: './output/dev'
 
 DATA_COMBINE: False
 
-# CUDA_VISIBLE_DEVICES=0 python train_fit.py --config_file configs/person/cnn_base.yml
+# CUDA_VISIBLE_DEVICES=0 python train_fit.py --config_file configs/clipfit/dev.yml
