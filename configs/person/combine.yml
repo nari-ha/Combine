@@ -77,10 +77,10 @@ DATASETS:
 #   ROOT_DIR: ('')
 # OUTPUT_DIR: ''
 
-  NAMES: ('market1501')
+  NAMES: ('msmt17')
   EVAL: 'person'
   ROOT_DIR: ('./../dataset')
-OUTPUT_DIR: './output/combine'
+OUTPUT_DIR: './output/person'
 DATA_COMBINE: True
 
 
