@@ -24,7 +24,7 @@ def make_optimizer_2stage(cfg, model, center_criterion):
     params = []
     keys = []
     for key, value in model.named_parameters():
-        if "text_encoder" in key:
+        if "text_encoder" in key and "c_fc.bias" not in key and "c_proj.bias" not in key:
             value.requires_grad_(False)
             continue   
         if "prompt_learner" in key:
@@ -44,6 +44,7 @@ def make_optimizer_2stage(cfg, model, center_criterion):
         
         params += [{"params": [value], "lr": lr, "weight_decay": weight_decay}]
         keys += [key]
+
     for k, v in model.named_parameters():
         if v.requires_grad:
             print(f"Trainable: {k}")
