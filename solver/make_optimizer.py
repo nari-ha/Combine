@@ -17,6 +17,11 @@ def make_optimizer(cfg, model, center_criterion):
                 print('Using two times learning rate for fc ')
 
         params += [{"params": [value], "lr": lr, "weight_decay": weight_decay}]
+    for name, param in model.image_encoder.named_parameters():
+        if "bn" in name:
+            param.requires_grad = True
+        else:
+            param.requires_grad = False
     for k, v in model.named_parameters():
         if v.requires_grad:
             print(f"Trainable: {k}")
