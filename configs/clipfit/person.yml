@@ -49,7 +49,7 @@ TEST:
   FEAT_NORM: 'yes'
 
 DATASETS:
-  NAMES: ('msmt17')
+  NAMES: ('person')
   EVAL: 'person'
   ROOT_DIR: ('./../dataset')
 OUTPUT_DIR: './output/clipfit/person'
