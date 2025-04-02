@@ -80,7 +80,7 @@ DATASETS:
   NAMES: ('multi')
   EVAL: 'person'
   ROOT_DIR: ('./../dataset')
-OUTPUT_DIR: './output/0402/person'
+OUTPUT_DIR: './output/person'
 DATA_COMBINE: True
 
 
