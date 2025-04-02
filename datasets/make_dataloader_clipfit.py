@@ -72,35 +72,30 @@ def make_dataloader(cfg):
             train_data = dataset1.train + dataset2.train
             query_data = dataset1.query + dataset2.query
             gallery_data = dataset1.gallery + dataset2.gallery
-        elif dataset_name == "vehicle":
-            return None
+        elif dataset_name == "veri":
+            num_classes = dataset3.num_train_pids
+            cam_num = dataset3.num_train_cams
+            view_num = dataset3.num_train_vids
+            train_data = dataset3.train
         elif dataset_name == "multi":
-            dataset3 = VeRi(root=cfg.DATASETS.ROOT_DIR)
             num_classes = dataset1.num_train_pids + dataset2.num_train_pids + dataset3.num_train_pids
             cam_num = dataset1.num_train_cams + dataset2.num_train_cams + dataset3.num_train_cams
             view_num = max(dataset1.num_train_vids, dataset2.num_train_vids, dataset3.num_train_vids)
             train_data = dataset1.train + dataset2.train + dataset3.train
-            query_data = dataset1.query + dataset2.query + dataset3.query
-            gallery_data = dataset1.gallery + dataset2.gallery + dataset3.gallery
         elif dataset_name == "market1501":
             num_classes = dataset1.num_train_pids
             cam_num = dataset1.num_train_cams
             view_num = dataset1.num_train_vids
             train_data = dataset1.train
-            query_data = dataset1.query
-            gallery_data = dataset1.gallery
         elif dataset_name == "msmt17":
             num_classes = dataset2.num_train_pids
             cam_num = dataset2.num_train_cams
             view_num = dataset2.num_train_vids
             train_data = dataset2.train
-            query_data = dataset2.query
-            gallery_data = dataset2.gallery
         
         train_set = ImageDataset(train_data, train_transforms)
         train_set_normal = ImageDataset(train_data, val_transforms)
 
-        
         if eval_name == 'market1501' or eval_name == 'msmt17' or eval_name == 'veri':
             dataset = __factory[eval_name](root=cfg.DATASETS.ROOT_DIR)
             query_data = dataset.query
@@ -114,10 +109,10 @@ def make_dataloader(cfg):
             
         val_set = ImageDataset(query_data + gallery_data, val_transforms)    
         query_len = len(query_data)
-            
-        train_loader = DataLoader(
-            train_set, batch_size=cfg.SOLVER.IMS_PER_BATCH,
-            sampler=RandomIdentitySampler(train_data, cfg.SOLVER.IMS_PER_BATCH, cfg.DATALOADER.NUM_INSTANCE),
+        
+        train_loader_stage2 = DataLoader(
+            train_set, batch_size=cfg.SOLVER.STAGE2.IMS_PER_BATCH,
+            sampler=RandomIdentitySampler(train_data, cfg.SOLVER.STAGE2.IMS_PER_BATCH, cfg.DATALOADER.NUM_INSTANCE),
             num_workers=num_workers, collate_fn=train_collate_fn
         )
         
