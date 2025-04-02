@@ -109,14 +109,12 @@ def make_dataloader(cfg):
             
         val_set = ImageDataset(query_data + gallery_data, val_transforms)    
         query_len = len(query_data)
-    
             
         train_loader = DataLoader(
             train_set, batch_size=cfg.SOLVER.IMS_PER_BATCH,
             sampler=RandomIdentitySampler(train_data, cfg.SOLVER.IMS_PER_BATCH, cfg.DATALOADER.NUM_INSTANCE),
             num_workers=num_workers, collate_fn=train_collate_fn
         )
-        
         
     else:
         print("데이터셋: ", cfg.DATASETS.NAMES)
