@@ -68,5 +68,5 @@ DATASETS:
   NAMES: ('veri')
   EVAL: 'msmt17'
   ROOT_DIR: ('./../dataset')
-OUTPUT_DIR: './output/0402/msmt17'
-DATA_COMBINE: True
+OUTPUT_DIR: './output/msmt17'
+DATA_COMBINE: False

@@ -68,6 +68,6 @@ DATASETS:
   NAMES: ('veri')
   EVAL: 'market1501'
   ROOT_DIR: ('./../dataset')
-OUTPUT_DIR: './output/0402/market1501'
-DATA_COMBINE: True
+OUTPUT_DIR: './output/market1501'
+DATA_COMBINE: False
 
