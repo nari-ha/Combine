@@ -65,8 +65,8 @@ TEST:
   FEAT_NORM: 'yes'
 
 DATASETS:
-  NAMES: ('msmt17')
+  NAMES: ('multi')
   EVAL: 'msmt17'
   ROOT_DIR: ('./../dataset')
-OUTPUT_DIR: './output/0331/msmt17'
-DATA_COMBINE: False
+OUTPUT_DIR: './output/0402/msmt17'
+DATA_COMBINE: True
