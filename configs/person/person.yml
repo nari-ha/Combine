@@ -80,7 +80,7 @@ DATASETS:
   NAMES: ('veri')
   EVAL: 'person'
   ROOT_DIR: ('./../dataset')
-OUTPUT_DIR: './output/person'
+OUTPUT_DIR: './output/test/person'
 DATA_COMBINE: False
 
 
