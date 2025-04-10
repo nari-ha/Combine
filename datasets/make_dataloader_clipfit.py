@@ -16,9 +16,7 @@ from .veri import VeRi
 __factory = {
     'market1501': Market1501,
     'msmt17': MSMT17,
-    'veri': VeRi,
-    'dev_market': DevMarket,
-    'dev_msmt': DevMSMT,
+    'veri': VeRi
 }
 
 def train_collate_fn(batch):
