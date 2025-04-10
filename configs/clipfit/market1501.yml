@@ -54,6 +54,5 @@ DATASETS:
   ROOT_DIR: ('./../dataset')
 OUTPUT_DIR: './output/clipfit/market1501'
 
-DATA_COMBINE: True
 
 # CUDA_VISIBLE_DEVICES=0 python train_fit.py --config_file configs/person/cnn_base.yml

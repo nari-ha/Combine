@@ -49,10 +49,9 @@ TEST:
   FEAT_NORM: 'yes'
 
 DATASETS:
-  NAMES: ('multi')
-  EVAL: 'msmt17'
+  NAMES: ('cross')
+  EVAL: 'cross'
   ROOT_DIR: ('./../dataset')
-OUTPUT_DIR: './output/clipfit/msmt17'
-
+OUTPUT_DIR: './output/clipfit/cross'
 
 # CUDA_VISIBLE_DEVICES=0 python train_fit.py --config_file configs/person/cnn_base.yml

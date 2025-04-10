@@ -54,6 +54,5 @@ DATASETS:
   ROOT_DIR: ('./../dataset')
 OUTPUT_DIR: './output/dev'
 
-DATA_COMBINE: False
-
+DEV_MODE: False
 # CUDA_VISIBLE_DEVICES=0 python train_fit.py --config_file configs/clipfit/dev.yml

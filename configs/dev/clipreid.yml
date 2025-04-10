@@ -70,7 +70,6 @@ DATASETS:
   ROOT_DIR: './../dataset'
 OUTPUT_DIR: './output/dev'
 
-DATA_COMBINE: False
 DEV_MODE: True
 
 # python train.py --config_file configs/dev/cnn_dev.yml

@@ -69,4 +69,3 @@ DATASETS:
   EVAL: 'msmt17'
   ROOT_DIR: ('./../dataset')
 OUTPUT_DIR: './output/test/msmt17'
-DATA_COMBINE: False
