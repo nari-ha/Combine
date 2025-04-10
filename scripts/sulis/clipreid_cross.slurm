@@ -5,10 +5,10 @@
 #SBATCH --mem-per-cpu=3850
 #SBATCH --gres=gpu:ampere_a100:1
 #SBATCH --partition=gpu
-#SBATCH --time=08:00:00
+#SBATCH --time=16:00:00
 #SBATCH --account=su008-ec23709
 
 module load GCCcore/12.2.0 Python/3.10.8
 cd /home/e/ec23709/project/Combine
 source ./../reid/bin/activate
-python train_fit.py --config_file configs/clipfit/cross.yml
+python train.py --config_file configs/clipreid/cross.yml

@@ -54,4 +54,4 @@ DATASETS:
   ROOT_DIR: ('./../../dataset')
 OUTPUT_DIR: './output/clipfit/cross'
 
-# CUDA_VISIBLE_DEVICES=0 python train_fit.py --config_file configs/person/cnn_base.yml
+# CUDA_VISIBLE_DEVICES=0 python train_fit.py --config_file configs/clipfit/cross.yml
