@@ -52,6 +52,6 @@ DATASETS:
   NAMES: ('cross')
   EVAL: 'cross'
   ROOT_DIR: ('./../../dataset')
-OUTPUT_DIR: './output/clipfit/cross'
+OUTPUT_DIR: './output/clipreid/cross'
 
 # CUDA_VISIBLE_DEVICES=0 python train_fit.py --config_file configs/person/cnn_base.yml
