@@ -33,7 +33,6 @@ def val_collate_fn(batch):
     return torch.stack(imgs, dim=0), pids, camids, camids_batch, viewids, img_paths
 
 def make_dataloader(cfg):
-    data_combine = cfg.DATA_COMBINE
     dataset_name = cfg.DATASETS.NAMES
     eval_name = cfg.DATASETS.EVAL
     
