@@ -58,14 +58,17 @@ def make_dataloader(cfg):
 
     num_workers = cfg.DATALOADER.NUM_WORKERS
 
-
-    dataset1 = Market1501(root=cfg.DATASETS.ROOT_DIR)
-    dataset2 = MSMT17(root=cfg.DATASETS.ROOT_DIR)
+    
+    if cfg.DEV_MODE == True:
+        dataset1 = DevMarket(root=cfg.DATASETS.ROOT_DIR)
+        dataset2 = DevMSMT(root=cfg.DATASETS.ROOT_DIR)
+    else:
+        dataset1 = Market1501(root=cfg.DATASETS.ROOT_DIR)
+        dataset2 = MSMT17(root=cfg.DATASETS.ROOT_DIR)
+    
     dataset3 = VeRi(root=cfg.DATASETS.ROOT_DIR)
+    
     if dataset_name == "person":
-        if cfg.DEV_MODE == True:
-            dataset1 = DevMarket(root=cfg.DATASETS.ROOT_DIR)
-            dataset2 = DevMSMT(root=cfg.DATASETS.ROOT_DIR)
         num_classes = dataset1.num_train_pids + dataset2.num_train_pids
         cam_num = dataset1.num_train_cams + dataset2.num_train_cams
         view_num = max(dataset1.num_train_vids, dataset2.num_train_vids)
