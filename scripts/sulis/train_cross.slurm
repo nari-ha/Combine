@@ -11,4 +11,4 @@
 module load GCCcore/12.2.0 Python/3.10.8
 cd /home/e/ec23709/project/Combine
 source ./../reid/bin/activate
-srun python train_fit.py --config_file configs/clipfit/cross.yml
+python train_fit.py --config_file configs/clipfit/cross.yml
