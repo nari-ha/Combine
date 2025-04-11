@@ -65,12 +65,12 @@ TEST:
   FEAT_NORM: 'yes'
 
 DATASETS:
-  NAMES: 'dev_market'
-  EVAL: 'dev_market'
-  ROOT_DIR: './../dataset'
+  NAMES: 'market1501'
+  EVAL: 'market1501'
+  ROOT_DIR: './../../dataset'
 OUTPUT_DIR: './output/dev'
 
 DEV_MODE: True
 
-# python train.py --config_file configs/dev/cnn_dev.yml
+# python train.py --config_file configs/dev/clipreid.yml
 # dev_market & dev_msmt

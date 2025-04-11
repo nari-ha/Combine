@@ -124,19 +124,27 @@ def make_dataloader(cfg):
     val_set = ImageDataset(query_data + gallery_data, val_transforms)
              
     train_loader_stage1 = DataLoader(
-        train_set_normal, batch_size=cfg.SOLVER.STAGE1.IMS_PER_BATCH, shuffle=True, num_workers=num_workers,
+        train_set_normal, 
+        batch_size=cfg.SOLVER.STAGE1.IMS_PER_BATCH, 
+        shuffle=True, 
+        num_workers=num_workers,
         collate_fn=train_collate_fn
     )
     
     val_loader = DataLoader(
-        val_set, batch_size=cfg.TEST.IMS_PER_BATCH, shuffle=False, num_workers=num_workers,
+        val_set, 
+        batch_size=cfg.TEST.IMS_PER_BATCH, 
+        shuffle=False, 
+        num_workers=num_workers,
         collate_fn=val_collate_fn
     )
     
     train_loader_stage2 = DataLoader(
-        train_set, batch_size=cfg.SOLVER.STAGE2.IMS_PER_BATCH,
+        train_set, 
+        batch_size=cfg.SOLVER.STAGE2.IMS_PER_BATCH,
         sampler=RandomIdentitySampler(train_data, cfg.SOLVER.STAGE2.IMS_PER_BATCH, cfg.DATALOADER.NUM_INSTANCE),
-        num_workers=num_workers, collate_fn=train_collate_fn
+        num_workers=num_workers, 
+        collate_fn=train_collate_fn
     )
     
     return train_loader_stage2, train_loader_stage1, val_loader, len(query_data), num_classes, cam_num, view_num
