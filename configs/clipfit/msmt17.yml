@@ -51,7 +51,7 @@ TEST:
 DATASETS:
   NAMES: ('cross')
   EVAL: 'msmt17'
-  ROOT_DIR: ('./../dataset')
+  ROOT_DIR: ('./../../dataset')
 OUTPUT_DIR: './output/clipfit/msmt17'
 
 

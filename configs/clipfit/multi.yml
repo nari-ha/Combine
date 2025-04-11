@@ -52,7 +52,7 @@ TEST:
 DATASETS:
   NAMES: ('cross')
   EVAL: 'multi'
-  ROOT_DIR: ('./../dataset')
+  ROOT_DIR: ('./../../dataset')
 OUTPUT_DIR: './output/clipfit/multi'
 
 
