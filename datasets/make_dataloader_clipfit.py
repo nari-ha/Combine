@@ -119,7 +119,7 @@ def make_dataloader(cfg):
         query_data = dataset1.query + dataset2.query + dataset3.query
         gallery_data = dataset1.gallery + dataset2.gallery + dataset3.gallery
         
-    val_set = ImageDataset(query_data + gallery_data, val_transforms)    
+    val_set = ImageDataset(query_data + gallery_data, val_transforms)
         
     train_loader = DataLoader(
         train_set, batch_size=cfg.SOLVER.IMS_PER_BATCH,
