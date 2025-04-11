@@ -65,9 +65,9 @@ TEST:
   FEAT_NORM: 'yes'
 
 DATASETS:
-  NAMES: ('veri')
+  NAMES: ('cross')
   EVAL: ('veri')
-  ROOT_DIR: ('./../dataset')
+  ROOT_DIR: ('./../../dataset')
 OUTPUT_DIR: './output/clipreid/veri'
 
 # python train.py --config_file configs/veri/cnn.yml
