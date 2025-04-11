@@ -80,6 +80,6 @@ DATASETS:
   NAMES: ('veri')
   EVAL: 'person'
   ROOT_DIR: ('./../dataset')
-OUTPUT_DIR: './output/test/person'
+OUTPUT_DIR: './output/clipreid/person'
 
 # CUDA_VISIBLE_DEVICES=1 python train_clipreid.py --config_file configs/person/res_clipreid.yml

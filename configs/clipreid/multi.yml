@@ -77,11 +77,12 @@ DATASETS:
 #   ROOT_DIR: ('')
 # OUTPUT_DIR: ''
 
-  NAMES: ('veri')
+  NAMES: ('multi')
   EVAL: ('multi')
-  ROOT_DIR: ('./../dataset')
-OUTPUT_DIR: './output/multi'
+  ROOT_DIR: ('./../../dataset')
+OUTPUT_DIR: './output/clipreid/multi'
 DATA_COMBINE: True
 
+DEV_MODE: False
 
 # CUDA_VISIBLE_DEVICES=1 python train_clipreid.py --config_file configs/person/res_clipreid.yml

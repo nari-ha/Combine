@@ -68,4 +68,4 @@ DATASETS:
   NAMES: ('veri')
   EVAL: 'market1501'
   ROOT_DIR: ('./../dataset')
-OUTPUT_DIR: './output/market1501'
+OUTPUT_DIR: './output/clipreid/market1501'
