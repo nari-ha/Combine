@@ -81,7 +81,6 @@ DATASETS:
   EVAL: ('multi')
   ROOT_DIR: ('./../../dataset')
 OUTPUT_DIR: './output/clipreid/multi'
-DATA_COMBINE: True
 
 DEV_MODE: False
 
